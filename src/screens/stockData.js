@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import StockChart from "../components/StockChart";
+import '../App.css';
 
 const StockData = () => {
   const [symbol, setSymbol] = useState("");
@@ -62,10 +64,9 @@ const StockData = () => {
   };
 
   return (
-    <Container fluid className="mainBody m-1">
-      <Row className="py-5">
-        <Col lg={2}></Col>
-        <Col lg={8}>
+    <Container fluid className="mainBody m-1 pb-5">
+      <Row className="py-5 px-5">
+        <Col lg={4}>
           <h1>Stock Data</h1>
           <Form onSubmit={handleGetStockData}>
             <Form.Group controlId="formSymbol">
@@ -99,42 +100,6 @@ const StockData = () => {
             </Form.Group>
             <Button type="submit">Get Data</Button>
           </Form>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {data && (
-            <div>
-              <h2>Results for {data.symbol}</h2>
-              <p>Highest Value: {data.highestValue}</p>
-              <p>Lowest Value: {data.lowestValue}</p>
-              <h3>Data in Range:</h3>
-              <table className="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>Timestamp</th>
-                    <th>Open</th>
-                    <th>High</th>
-                    <th>Low</th>
-                    <th>Close</th>
-                    <th>Volume</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.dataInRange.map((entry) => (
-                    <tr key={entry.timestamp}>
-                      <td>
-                        {new Date(entry.timestamp * 1000).toLocaleDateString()}
-                      </td>
-                      <td>{entry.open}</td>
-                      <td>{entry.high}</td>
-                      <td>{entry.low}</td>
-                      <td>{entry.close}</td>
-                      <td>{entry.volume}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
           <h1>Update Stock Data</h1>
           <Form onSubmit={handleUpdateStockData}>
             <Form.Group controlId="formUpdateSymbol">
@@ -148,6 +113,45 @@ const StockData = () => {
             </Form.Group>
             <Button type="submit">Update Data</Button>
           </Form>
+        </Col>
+        <Col lg={1}></Col>
+        <Col lg={4}>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {data && (
+            <div>
+              <h2>Results for {data.symbol}</h2>
+              <StockChart data={data.dataInRange} />
+              <p>Highest Value: {data.highestValue}</p>
+              <p>Lowest Value: {data.lowestValue}</p>
+              <h3>Data in Range:</h3>
+              <div className="table-container">
+                <table className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Open</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Close</th>
+                      <th>Volume</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.isArray(data.dataInRange) && data.dataInRange.map((entry) => (
+                      <tr key={entry.timestamp}>
+                        <td>{new Date(entry.timestamp * 1000).toLocaleDateString()}</td>
+                        <td>{parseFloat(entry.open.toFixed(2))}</td>
+                        <td>{parseFloat(entry.high.toFixed(2))}</td>
+                        <td>{parseFloat(entry.low.toFixed(2))}</td>
+                        <td>{parseFloat(entry.close.toFixed(2))}</td>
+                        <td>{entry.volume}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
           {updateMessage && <p>{updateMessage}</p>}
         </Col>
       </Row>
