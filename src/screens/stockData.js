@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Button, Container, Form } from 'react-bootstrap';
 
 const StockData = () => {
   const [symbol, setSymbol] = useState('');
@@ -30,7 +31,7 @@ const StockData = () => {
   const handleUpdateStockData = async (e) => {
     e.preventDefault();
     console.log('Updating stock data for symbol:', updateSymbol);
-  
+
     try {
       const response = await axios.post('http://localhost:5000/api/updateStockData', {
         symbol: updateSymbol,
@@ -44,41 +45,40 @@ const StockData = () => {
       setUpdateMessage('');
     }
   };
-  
 
   return (
-    <div>
+    <Container fluid>
       <h1>Stock Data</h1>
-      <form onSubmit={handleGetStockData}>
-        <div>
-          <label>Stock Symbol:</label>
-          <input
+      <Form onSubmit={handleGetStockData}>
+        <Form.Group controlId="formSymbol">
+          <Form.Label>Stock Symbol</Form.Label>
+          <Form.Control
             type="text"
             value={symbol}
             onChange={(e) => setSymbol(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Start Date:</label>
-          <input
+        </Form.Group>
+        <Form.Group controlId="formStartDate">
+          <Form.Label>Start Date</Form.Label>
+          <Form.Control
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>End Date:</label>
-          <input
+        </Form.Group>
+        <Form.Group controlId="formEndDate">
+          <Form.Label>End Date</Form.Label>
+          <Form.Control
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             required
           />
-        </div>
-        <button type="submit">Get Data</button>
-      </form>
+        </Form.Group>
+        <Button type="submit">Get Data</Button>
+      </Form>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {data && (
         <div>
@@ -86,7 +86,7 @@ const StockData = () => {
           <p>Highest Value: {data.highestValue}</p>
           <p>Lowest Value: {data.lowestValue}</p>
           <h3>Data in Range:</h3>
-          <table border="1">
+          <table className="table table-bordered">
             <thead>
               <tr>
                 <th>Timestamp</th>
@@ -114,20 +114,20 @@ const StockData = () => {
       )}
 
       <h1>Update Stock Data</h1>
-      <form onSubmit={handleUpdateStockData}>
-        <div>
-          <label>Stock Symbol:</label>
-          <input
+      <Form onSubmit={handleUpdateStockData}>
+        <Form.Group controlId="formUpdateSymbol">
+          <Form.Label>Stock Symbol</Form.Label>
+          <Form.Control
             type="text"
             value={updateSymbol}
             onChange={(e) => setUpdateSymbol(e.target.value)}
             required
           />
-        </div>
-        <button type="submit">Update Data</button>
-      </form>
+        </Form.Group>
+        <Button type="submit">Update Data</Button>
+      </Form>
       {updateMessage && <p>{updateMessage}</p>}
-    </div>
+    </Container>
   );
 };
 
