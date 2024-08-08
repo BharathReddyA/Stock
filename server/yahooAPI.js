@@ -45,9 +45,41 @@ const StockSchema = new mongoose.Schema({
 
 const Stock = mongoose.model('Stock', StockSchema);
 
-app.use(express.json());
-
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Endpoint to fetch company symbols
+app.get('/api/getCompanySymbols', async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ message: 'Query parameter is required' });
+  }
+
+  const options = {
+    method: 'GET',
+    url: `https://${RAPID_API_HOST}/auto-complete`,
+    params: { region: 'US', q: query },
+    headers: {
+      'x-rapidapi-key': RAPID_API_KEY,
+      'x-rapidapi-host': RAPID_API_HOST,
+    },
+  };
+
+  try {
+    const response = await axios.request(options);
+    const quotes = response.data.quotes || [];
+
+    const results = quotes.map((quote) => ({
+      symbol: quote.symbol,
+      shortname: quote.shortname,
+    }));
+
+    res.json(results);
+  } catch (error) {
+    console.error('Request error:', error.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // Update stock data
 app.post('/api/updateStockData', async (req, res) => {
