@@ -36,5 +36,28 @@ th, td {
 .table-container {
   max-height: 400px;
   overflow-y: auto;
-  min-width: 100;
+  min-width: 100%;
+  border-color: black;
+  border-width: 5px;
+  border-style:solid;
+  box-shadow: 0px 10px 10px 0px #013b27;
+  margin-bottom: 25px;
+}
+
+.chart-card{
+  border-color: black;
+  border-width: 5px;
+  border-style:solid;
+  box-shadow: 0px 10px 10px 0px #013b27;
+  margin-bottom: 25px;
+}
+
+.custom-button{
+  border-color: black;
+  border-width: 5px;
+  border-style:solid;
+  box-shadow: 0px 5px 5px 0px #013b27;
+  margin-bottom: 25px;
+  background-color: #b5c6c0;
+  color: white;
 }
